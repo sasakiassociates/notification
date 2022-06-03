@@ -22,23 +22,24 @@ export type NotificationConfig = NotificationGlobals & {
 
 export default class Notification {
 
-    public readonly args?: NotificationArgs;
+    public readonly args: NotificationArgs = { message: '' };
     public readonly element: HTMLDivElement;
-    private player: number;
-    private flasher: number;
-    private readonly drawer: HTMLDivElement;
+
+    private _player: ReturnType<typeof setTimeout>;
+    private _flasher: ReturnType<typeof setInterval>;
+    private readonly _drawer: HTMLDivElement;
 
     constructor(args: string|NotificationArgs)  {
-        if (!Notification.drawer) {
-            Notification.createDrawer();
+        if (!Notification._drawer) {
+            Notification._createDrawer();
         }
 
-        this.drawer = Notification.drawer;
+        this._drawer = Notification._drawer;
 
         const el = this.element = document.createElement('div');
         el.className = "Notification";
 
-        el.addEventListener('mouseenter', () => clearTimeout(this.player));
+        el.addEventListener('mouseenter', () => clearTimeout(this._player));
         el.addEventListener('mouseleave', () => this._play());
         el.addEventListener('click', () => this.finish());
 
@@ -47,7 +48,7 @@ export default class Notification {
             this.play();
         }
         else {
-            el.innerText = args.message || '';
+            el.innerText = args.message;
 
             if (args.className) {
                 el.className += ` ${args.className}`;
@@ -66,44 +67,44 @@ export default class Notification {
     }
 
     public finish() {
-        clearTimeout(this.player);
-        clearInterval(this.flasher);
+        clearTimeout(this._player);
+        clearInterval(this._flasher);
 
         this.element.classList.add('finished');
 
-        this.player = setTimeout(() => {
-            this.drawer.removeChild(this.element);
+        this._player = setTimeout(() => {
+            this._drawer.removeChild(this.element);
         }, 1000);
     }
 
     public play() {
-        Notification.current = this; 
-        this.drawer.appendChild(this.element);
+        Notification._current = this; 
+        this._drawer.appendChild(this.element);
 
         if (this.args.flash === true || Notification.flash) {
-            this.flash();
+            this._flash();
         }
 
         this._play();
     }
 
     private _play() {
-        clearTimeout(this.player);
+        clearTimeout(this._player);
 
         this.element.classList.remove('finished');
 
-        this.player = setTimeout(() => {
+        this._player = setTimeout(() => {
             this.finish();
         }, this.args.duration || Notification.duration);
     }
 
-    private flash() {
-        clearInterval(this.flasher);
+    private _flash() {
+        clearInterval(this._flasher);
         
         const { title } = document;
 
-        this.flasher = setInterval(() => {
-            if (Notification.current === this) {
+        this._flasher = setInterval(() => {
+            if (Notification._current === this) {
                 if (document.title === title) {
                     document.title = this.args.message;
                 }
@@ -112,7 +113,7 @@ export default class Notification {
                 }
             }
             else {
-                clearInterval(this.flasher);
+                clearInterval(this._flasher);
             }
         }, 500);
     }
@@ -126,13 +127,13 @@ export default class Notification {
     public static defer: boolean = false;
     public static duration: number = 3000;
     public static flash: boolean = false;
-    private static drawer?: HTMLDivElement;
-    private static current?: Notification;
+    private static _drawer?: HTMLDivElement;
+    private static _current?: Notification;
 
     public static configure(config: NotificationConfig) {
         if (config.mount && config.mount !== Notification.mount) {
             Notification.mount = config.mount;
-            Notification.createDrawer();
+            Notification._createDrawer();
         }
 
         Notification.defer = config.defer !== undefined ? config.defer : Notification.defer;
@@ -140,16 +141,16 @@ export default class Notification {
         Notification.flash = config.flash !== undefined ? config.flash : Notification.flash;
     }
 
-    private static createDrawer() {
-        if (Notification.drawer) {
-            Notification.drawer.parentNode.removeChild(Notification.drawer);
+    private static _createDrawer() {
+        if (Notification._drawer) {
+            Notification._drawer.parentNode.removeChild(Notification._drawer);
         }
 
         const drawer = document.createElement('div');
         drawer.className = 'Notification__Drawer';
 
         Notification.mount.appendChild(drawer);
-        Notification.drawer = drawer;
+        Notification._drawer = drawer;
     }
 
 };
