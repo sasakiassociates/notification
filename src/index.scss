@@ -1,19 +1,35 @@
+@use '~@strategies/tokens/color';
+@use '~@strategies/tokens/font';
 @use '~@strategies/tokens/layout';
 
+$speed: .75s;
+
 .Notification {
+    padding: layout.$padding;
+
+    font-size: font.$size--regular;
+
+    background: color.$white;
+    border: 1px solid color.$blue;
+    border-radius: layout.$border-radius;
 
     + .Notification {
-        di
+        margin-top: layout.$padding;
     }
 
     &.finished {
+        left: 200%;
+        opacity: .3;
+        transition: left $speed, opacity $speed;
     }
 
     &__Drawer {
         position: fixed;
-        z-index: ad
+        z-index: layout.$z--max;
         display: flex;
         flex-direction: column-reverse;
+
+        width: 30rem;
     }
 
 }
