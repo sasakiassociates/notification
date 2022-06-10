@@ -1,0 +1,19 @@
+@use '~@strategies/tokens/layout';
+
+.Notification {
+
+    + .Notification {
+        di
+    }
+
+    &.finished {
+    }
+
+    &__Drawer {
+        position: fixed;
+        z-index: ad
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+}

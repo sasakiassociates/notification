@@ -3,6 +3,9 @@
  */
 
 
+import './import.scss';
+
+
 export type NotificationGlobals = {
     defer?: boolean;   // if true, notifications will not play upon instantiantion.
     duration?: number; // ammount of time in milliseconds that a notification will show.
