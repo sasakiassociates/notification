@@ -64,20 +64,20 @@ export default class Notification {
             this.args = args;
             
             //individual attributes of notification should override general configuration of class
-            if (args.defer == true){
-            }
-            else if (args.defer == false){
-                this.play();
-            }
-            else{
-                if (!Notification.defer) {
-                    this.play();
+            
+
+            if (args.defer !== undefined){
+                if (args.defer !== true){
+                    this.play()
+                }
+                else{
                 }
             }
-
-            // if (args.defer !== true && !Notification.defer) {
-            //     this.play();
-            // }
+            else if (Notification.defer !== true){
+                this.play()
+            }
+            else{
+            }
         }
     }
 
