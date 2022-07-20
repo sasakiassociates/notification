@@ -3,7 +3,7 @@
  */
 
 
-import './import.scss';
+import './index.scss';
 
 
 export type NotificationGlobals = {
@@ -45,14 +45,14 @@ export default class Notification {
         el.addEventListener('mouseenter', () => clearTimeout(this._player));
         el.addEventListener('mouseleave', () => this._play());
         el.addEventListener('click', () => this.finish());
-
+        
         if (typeof args === 'string') {
             el.innerText = args;
             this.play();
         }
         else {
             el.innerText = args.message;
-
+            
             if (args.className) {
                 el.className += ` ${args.className}`;
             }
@@ -62,10 +62,22 @@ export default class Notification {
             }
 
             this.args = args;
-
-            if (args.defer !== true || !Notification.defer) {
+            
+            //individual attributes of notification should override general configuration of class
+            if (args.defer == true){
+            }
+            else if (args.defer == false){
                 this.play();
             }
+            else{
+                if (!Notification.defer) {
+                    this.play();
+                }
+            }
+
+            // if (args.defer !== true && !Notification.defer) {
+            //     this.play();
+            // }
         }
     }
 
