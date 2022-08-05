@@ -73,12 +73,6 @@ export default class Notification {
             
             //individual attributes of notification should override general configuration of class
            
-            console.log('notification.push ', Notification.push)
-            console.log('args.push ', args.push)
-
-            console.log('notification.defer ', Notification.defer)
-            console.log('args.defer ', args.defer)
-           
             if (Notification.defer !== undefined){
                     if (args.defer !== true){
                         this.play()
@@ -90,16 +84,6 @@ export default class Notification {
         }
     }
 
-      
-    static check = () => {
-        if (!('serviceWorker' in navigator)) {
-            throw new Error('No service worker support!')
-        }
-        if (!('PushManager' in window)) {
-            throw new Error('No Push API Support!')
-        }
-    }
-
     static registerServiceWorker = async () => {
         const swRegistration = await navigator.serviceWorker.register('./service.js'); //notice the file name
         return swRegistration
@@ -107,14 +91,8 @@ export default class Notification {
 
 
     static requestNotificationPermission = async () => {
-
         const permission = await window.Notification.requestPermission()
-        // value of permission can be 'granted', 'default', 'denied'
-        // granted: user has accepted the request
-        // default: user has dismissed the notification permission popup by clicking on x
-        // denied: user has denied the request.
         return (permission === 'granted')
-
     }
 
     static showPushNotification = async (title: string, body: string) => {
@@ -142,10 +120,7 @@ export default class Notification {
     }
 
     public play() {
-        console.log("______ this.args.push", this.args.push)
-        console.log("______ Notificatino.push", Notification.push)
-        console.log("document.hidden", document.hidden)
-
+        //if the attributes of the notification class and the inividual notification align, play the notification locally 
         if(!document.hidden && (this.args.push === false || (this.args.push === undefined && Notification.push !== true)) ){
             Notification._current = this; 
             this._drawer.appendChild(this.element);
@@ -155,8 +130,8 @@ export default class Notification {
             }
             this._play();
         }
+        //if the attributes align, make it a push notification 
         else {
-            console.log('pushing!')
             Notification.showPushNotification("Sasaki", this.args.message)
         }
 
