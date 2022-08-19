@@ -1,36 +1,62 @@
+@use 'sass:list';
 @use '~@strategies/tokens/color';
 @use '~@strategies/tokens/font';
 @use '~@strategies/tokens/layout';
 
 $speed: .75s;
 
+@keyframes fadeUp {
+    from {
+        margin-bottom: -3em;
+        opacity: 0;
+    }
+    to {
+        margin-bottom: 0em;
+        opacity: 1;
+    }
+}
+
+
 .Notification {
+    position: relative;
+    left: 0;
+
+    width: max-content;
+    margin-right: 0;
+    margin-left: auto;
+    margin-bottom: -3em;
     padding: layout.$padding;
 
     font-size: font.$size--regular;
 
+    animation-name: fadeUp;
+    animation-duration: calc(#{list.slash($speed, 2)});
+    animation-fill-mode: forwards;
     background: color.$white;
     border: 1px solid color.$blue;
     border-radius: layout.$border-radius;
+    opacity: 0;
+    transition: left $speed, opacity $speed;
 
     + .Notification {
         margin-top: layout.$padding;
     }
 
     &.finished {
-        left: 200%;
+        left: 100%;
         opacity: .3;
         transition: left $speed, opacity $speed;
     }
 
     &__Drawer {
-        position: fixed;
-        z-index: layout.$z--max;
         display: flex;
-        flex-direction: column-reverse;
+        flex-direction: column;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        z-index: layout.$z--max;
 
         width: 30rem;
-        bottom: 0;
+        padding: layout.$padding;
     }
-
 }
