@@ -1,6 +1,7 @@
 # Sasaki's Notification
-### System for applying incremental patches to a data structure.
+### Pure JS notifications; popups and push enabled.
 
+# Documentation
 
 ## Install
 ```
@@ -8,49 +9,76 @@ yarn add @strategies/notification
 ```
 
 
-## Example
-
-### constructor
-Should be a able to take a string which is the message or a NotificationArgs object.
+## Usage
 
 ```
-const notification = new Notification('hello');
-const notification = new Notification({ message: 'hello' });
+new Notification('hello');
+new Notification({ message: 'hello' });
 ```
 
-### defer
-```
-const shouldPlay =  new Notification({ message: 'hello', defer: false });
+### Lifecycle
+There are two lifecycle methods: `.play()` and `.finish()`. All notifications can 
+be replayed instead of having to create a new Notification each time you want to display
+that notification.
 
-// Should not play immediately
-const n = new Notification({ message: 'hello', defer: true });
-
-// Should play when calling play
-n.play();
 ```
-
-### duration
-```
-// Should play for 5 seconds
-const n = new Notification({ message: 'hello', duration: 5000 });
+const notification = new Notification('Repeat me');
+notification.play();
+notification.play();
 ```
 
-### flash
+### Attach a click event to a notification
 ```
-// Should always play latest notification
-const n = new Notification({ message: 'hello' });
-```
-
-### onClick
-```
-// Should log 'goodbye' in the console
-const n = new Notification({ message: 'hello', onClick: () => console.log('goodbye')});
+let notification: Notification;
+notification = new Notification({
+    message: 'A will stay open until clicked',
+    duration: Infinity,
+    onClick: () => notification.finish(),
+});
 ```
 
-### configure
+### Deferred notifications
+If you want to create notifications to be used later, you can always defer them.
+
+```
+const notification = new Notification({ message: 'Hello', defer: true });
+
+// notification won't play until you tell it to play
+notification.play();
+```
+
+### Push notifications
+If you desire to use the push notification feature of this package, you must supply
+an empty JS file in your public folder to be used as a Service Worker. By default, 
+this file is `./notification.js`.
+
+
+## Configuration
+#### Environment
+You can configure the Notification environment statically on the Notification class. 
+_Note: these configuration settings are the default values._
+
 ```
 Notification.configure({
-    duration: 1000,
-    flash: true,
+    mount: document.querySelector('body'),
+    serviceWorker: './notification.js',
+});
+```
+
+#### Notifications
+You can configure the default settings for all notifications or pass the same
+configuration options into each Notification instance.
+
+```
+Notification.configure({
+    duration: 3000,
+    defer: false,
+    flash: false,
+    push: false,
+});
+
+new Notification({
+    message: 'Save Successful',
+    duration: 2000,
 });
 ```
