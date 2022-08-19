@@ -71,10 +71,10 @@ configuration options into each Notification instance.
 
 ```
 Notification.configure({
-    duration: 3000,
-    defer: false,
-    flash: false,
-    push: false,
+    duration: 3000,  // amount of time in milliseconds that a notification will show.
+    defer: false,    // if true, notifications will not play upon instantiantion.
+    flash: false,    // if true, the latest notification will repeatedly flash in the tab title.
+    push: false,     // if true, the notification will appear as a push notification rather than locally on the webpage
 });
 
 new Notification({
