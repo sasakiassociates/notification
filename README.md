@@ -31,7 +31,7 @@ notification.play();
 ```ts
 let notification: Notification;
 notification = new Notification({
-    message: 'A will stay open until clicked',
+    message: 'I will stay open until clicked',
     duration: Infinity,
     onClick: () => notification.finish(),
 });
