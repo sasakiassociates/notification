@@ -53,7 +53,10 @@ export default class Notification {
         
         if (typeof args === 'string') {
             el.innerText = args;
-            this.play();
+
+            if (!Notification.defer) {
+                this.play();
+            }
         }
         else {
             if (args.message != null) {
