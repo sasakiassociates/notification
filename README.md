@@ -10,6 +10,7 @@ yarn add @strategies/notification
 
 
 ## Usage
+Unless deferred, all Notification instances will display immediately upon invocation, no assignment required.
 
 ```js
 new Notification('hello');
